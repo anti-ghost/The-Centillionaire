@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>The Centillionaire</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="https://anti-ghost.github.io/images/ghost.jpg" />
+    <script 
+      src="https://cdn.jsdelivr.net/npm/vue/dist/vue.global.js"
+      defer
+    ></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1>{{formatMoney(game.money)}}</h1>
+      <p>(+{{formatMoney(getMoneyRate(1000))}}/s)</p>
+    </div>
+  </body>
+</html>
