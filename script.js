@@ -8,13 +8,27 @@ const newGame = {
   money: 0,
   bestMoney: 0,
   totalMoney: 0,
-  moneyLoop: [0]
+  investments: [1],
+  moneyLoop: [0],
+  managers: 0
 };
 
 function getMoneyRate() {
   let rate = 0;
   for (let i = 0; i < game.moneyLoop.length; i++) rate += getProfit(i) * getFrequency(i);
   return rate;
+}
+
+function getProfit(i) {
+  return 10 ** i * game.investments[i];
+}
+
+function getFrequency(i) {
+  return 2 ** (Math.floor(game.investments[i] / 10) - i);
+}
+
+function getUpgradeCost(i) {
+  return 100 ** i * game.investments[i] * 5 ** (Math.floor(game.investments[i] / 10) + 1);
 }
 
 function format(number, f = 0) {
@@ -49,24 +63,47 @@ function formatMoney(money) {
   return "$" + format(money, 2);
 }
 
-function collect(i) {
-  game.moneyLoop[i] = 0;
-  game.money += getProfit(i);
-  game.totalMoney += getProfit(i);
+function collect(i, bulk = 1) {
+  if (game.moneyLoop[i] >= bulk) {
+    game.moneyLoop[i] -= bulk;
+    game.money += getProfit(i) * bulk;
+    game.totalMoney += getProfit(i) * bulk;
+  }
+}
+
+function upgrade(i) {
+  if (game.money >= getUpgradeCost(i)) {
+    game.money -= getUpgradeCost(i);
+    game.investments[i]++;
+  }
+}
+
+function unlockInvestment() {
+  if (game.investments.length < 6 && game.money.gte(100 ** game.investments.length)) {
+    game.money -= 100 ** game.investments.length;
+    game.investments.push(1);
+    game.moneyLoop.push(0);
+  }
+}
+
+function buyManager() {
+  if (game.money >= 10 ** (2 * game.managers + 1)) {
+    game.money -= 10 ** (2 * game.managers + 1);
+    game.managers++;
+  }
 }
 
 function loop(time) {
   if (game.money > game.bestMoney) game.bestMoney = game.money;
   for (let i = 0; i < game.moneyLoop.length; i++) {
     game.moneyLoop[i] += getFrequency(i) * time;
-    game.moneyLoop[i] = Math.min(game.moneyLoop[i], 1);
+    if (i < game.managers) collect(i, Math.floor(game.moneyLoop[i]));
+    else game.moneyLoop[i] = Math.min(game.moneyLoop[i], 1);
   }
 }
   
 function simulateTime(ms) {
   game.lastTick = Date.now();
   if (DEBUG) ms *= dev.speed;
-  for (let i = 0; i < game.cpf; i++) {
-    loop(ms / (1000 * game.cpf));
-  }
+  for (let i = 0; i < game.cpf; i++) loop(ms / (1000 * game.cpf));
 }
