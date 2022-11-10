@@ -100,6 +100,7 @@ function formatMoney(money) {
 }
 
 function invest(i) {
+  console.log(this);
   if (this instanceof HTMLElement) {
     if (clickCooldown > 0) {
       clickCooldown = 100;
