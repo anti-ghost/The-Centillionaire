@@ -26,7 +26,11 @@
             <td style="text-align: left">
               Investment {{x}}: {{formatMoney(getProfit(x - 1))}}/{{formatTime(1 / getFrequency(x - 1))}}
               <button @click="game.investing[x - 1] ? collect(x - 1) : invest(x - 1)">
-                {{game.investing[x - 1] ? game.moneyLoop[x - 1] &lt; 1 ? formatTime((1 - game.moneyLoop[x - 1]) / getFrequency(x - 1)) : "Collect" : "Invest"}}
+                {{
+                  game.investing[x - 1] ? 
+                  game.moneyLoop[x - 1] &lt; 1 ? formatTime(Math.ceil((1 - game.moneyLoop[x - 1]) / getFrequency(x - 1))) : "Collect" :
+                  "Invest"
+                }}
               </button>
             </td>
             <td style="text-align: right">
