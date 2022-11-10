@@ -20,6 +20,12 @@
     <div id="app">
       <h1>{{formatMoney(game.money)}}</h1>
       <p>(+{{formatMoney(getMoneyRate())}}/s)</p>
+      <p v-for="x in game.investments.length">
+        Investment {{x}}: {{formatMoney(getProfit(x - 1))}}/{{formatTime(1 / getFrequency(x - 1))}}
+        <button @click="game.investing[x - 1] ? collect() : invest()">
+          {{game.investing[x - 1] ? game.moneyLoop[x - 1] < 1 ? formatTime((1 - game.moneyLoop[x - 1]) / getFrequency(x - 1)) : "Collect" : "Invest"}}
+        </button>
+      </p>
     </div>
   </body>
 </html>
