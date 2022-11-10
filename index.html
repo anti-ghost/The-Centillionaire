@@ -34,21 +34,24 @@
               <button @click="buyManager()" style="width: 200px">
                 Buy a manager<br />
                 <span v-if="game.managers == 6">Maxed</span>
-                <span v-else>Cost: {{formatMoney(10 ** (2 * game.managers + 1))}}</span>
+                <span v-else>Cost: {{formatMoney(10 ** (2 * game.managers + 2))}}</span>
               </button>
             </td>
           </tr>
           <tr v-for="x in game.investments.length">
             <td style="text-align: left">
-              Investment {{x}}: <span v-if="x <= game.managers">{{formatMoney(getProfit(x - 1) * getFrequency(x - 1))}}/s</span>
-              <span v-else>{{formatMoney(getProfit(x - 1))}} every {{formatTime(1 / getFrequency(x - 1), 3)}}</span>
+              Investment {{x}}: {{formatMoney(getProfit(x - 1))}}
               <button @click="game.investing[x - 1] ? collect(x - 1) : invest(x - 1)" style="width: 150px; margin: 0 8px;">
                 {{
-                  game.investing[x - 1] ? 
-                    game.moneyLoop[x - 1] &lt; 1 ?
+                  x &lt;= game.managers ?
+                    getFrequency(x - 1) > 10 ? 
+                      formatMoney(getProfit(x - 1) * getFrequency(x - 1)) + "/s": 
                       formatTime((1 - game.moneyLoop[x - 1]) / getFrequency(x - 1), 3) :
-                      "Collect" :
-                    "Invest"
+                    game.investing[x - 1] ? 
+                      game.moneyLoop[x - 1] &lt; 1 ?
+                        formatTime((1 - game.moneyLoop[x - 1]) / getFrequency(x - 1), 3) :
+                        "Collect" :
+                      "Invest"
                 }}
               </button>
             </td>
