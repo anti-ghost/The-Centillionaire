@@ -81,16 +81,16 @@ function format(number, f = 0) {
 
 function formatTime(time, f = 0) {
   if (time == Infinity) return "forever";
-  if (time < 60) return format(time, p) + "s";
+  if (time < 60) return format(time, f) + "s";
   if (time < 3600) return Math.floor(time / 60) + "m " +
-    (time % 60).toFixed(f) + "s";
+    format(time % 60, f) + "s";
   if (time < 86400) return Math.floor(time / 3600) + "h " +
     Math.floor((time % 3600) / 60) + "m " +
-    (time % 60).toFixed(f) + "s";
-  return Math.floor(time / 86400) + "d " +
+    format(time % 60, f) + "s";
+  return format(Math.floor(time / 86400)) + "d " +
     Math.floor((time % 86400) / 3600) + "h " +
     Math.floor((time % 3600) / 60) + "m" +
-    (time % 60).toFixed(f) + "s";
+    format(time % 60, f) + "s";
 }
 
 function formatMoney(money) {
