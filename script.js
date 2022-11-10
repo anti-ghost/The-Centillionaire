@@ -128,8 +128,8 @@ function unlockInvestment() {
 }
 
 function buyManager() {
-  if (game.managers < 6 && game.money >= 10 ** (2 * game.managers + 1)) {
-    game.money -= 10 ** (2 * game.managers + 1);
+  if (game.managers < 6 && game.money >= 10 ** (2 * game.managers + 2)) {
+    game.money -= 10 ** (2 * game.managers + 2);
     game.managers++;
   }
 }
