@@ -47,6 +47,8 @@ let interval, saveInterval;
 
 let devSpeed = 1;
 
+let clickCooldown = 0;
+
 function getMoneyRate() {
   let rate = 0;
   for (let i = 0; i < game.managers; i++) rate += getProfit(i) * getFrequency(i);
@@ -98,10 +100,24 @@ function formatMoney(money) {
 }
 
 function invest(i) {
+  if (this instanceof HTMLElement) {
+    if (clickCooldown > 0) {
+      clickCooldown = 100;
+      return;
+    }
+    clickCooldown = 100;
+  }
   if (i >= game.managers) game.investing[i] = true;
 }
 
 function collect(i) {
+  if (this instanceof HTMLElement) {
+    if (clickCooldown > 0) {
+      clickCooldown = 100;
+      return;
+    }
+    clickCooldown = 100;
+  }
   if (i < game.managers) return;
   if (game.moneyLoop[i] >= 1) {
     game.moneyLoop[i] = 0;
@@ -112,6 +128,13 @@ function collect(i) {
 }
 
 function upgrade(i) {
+  if (this instanceof HTMLElement) {
+    if (clickCooldown > 0) {
+      clickCooldown = 100;
+      return;
+    }
+    clickCooldown = 100;
+  }
   if (game.money >= getUpgradeCost(i)) {
     game.money -= getUpgradeCost(i);
     game.investments[i]++;
@@ -119,6 +142,13 @@ function upgrade(i) {
 }
 
 function unlockInvestment() {
+  if (this instanceof HTMLElement) {
+    if (clickCooldown > 0) {
+      clickCooldown = 100;
+      return;
+    }
+    clickCooldown = 100;
+  }
   if (game.investments.length < 6 && game.money >= 100 ** game.investments.length) {
     game.money -= 100 ** game.investments.length;
     game.investments.push(1);
@@ -128,6 +158,13 @@ function unlockInvestment() {
 }
 
 function buyManager() {
+  if (this instanceof HTMLElement) {
+    if (clickCooldown > 0) {
+      clickCooldown = 100;
+      return;
+    }
+    clickCooldown = 100;
+  }
   if (game.money >= 10 ** (2 * game.managers + 1)) {
     game.money -= 10 ** (2 * game.managers + 1);
     game.managers++;
@@ -145,8 +182,9 @@ function loop(time) {
     } else game.moneyLoop[i] = Math.min(game.moneyLoop[i], 1);
   }
 }
-  
-function simulateTime(ms) {
+
+function simulateTime(ms, off = false) {
+  if (!off) clickCooldown -= ms;
   game.lastTick = Date.now();
   ms *= devSpeed;
   for (let i = 0; i < game.cpf; i++) loop(ms / (1000 * game.cpf));
@@ -169,10 +207,17 @@ function loadGame(loadgame) {
   game.version = VERSION;
   const diff = Date.now() - game.lastTick;
   console.log(diff);
-  simulateTime(diff);
+  simulateTime(diff, true);
 }
 
 function save(auto = false) {
+  if (this instanceof HTMLElement) {
+    if (clickCooldown > 0) {
+      clickCooldown = 100;
+      return;
+    }
+    clickCooldown = 100;
+  }
   localStorage.setItem(
     "TheCentillionaireSave",
     btoa(JSON.stringify(game))
@@ -200,6 +245,13 @@ function copyStringToClipboard(str) {
 }
 
 function importSave() {
+  if (this instanceof HTMLElement) {
+    if (clickCooldown > 0) {
+      clickCooldown = 100;
+      return;
+    }
+    clickCooldown = 100;
+  }
   try {
     const txt = prompt("Copy-paste your save. WARNING: WILL OVERWRITE YOUR SAVE");
     const loadgame = JSON.parse(atob(txt));
@@ -209,11 +261,25 @@ function importSave() {
 }
 
 function exportSave() {
+  if (this instanceof HTMLElement) {
+    if (clickCooldown > 0) {
+      clickCooldown = 100;
+      return;
+    }
+    clickCooldown = 100;
+  }
   copyStringToClipboard(btoa(JSON.stringify(game)));
   $.notify("Copied to clipboard!", "success");
 }
 
 function hardReset() {
+  if (this instanceof HTMLElement) {
+    if (clickCooldown > 0) {
+      clickCooldown = 100;
+      return;
+    }
+    clickCooldown = 100;
+  }
   if (confirm("This will delete all game data along with the ability for us to restore it. Are you sure?")) {
     clearInterval(interval);
     clearInterval(saveInterval);
