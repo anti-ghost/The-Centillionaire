@@ -72,11 +72,11 @@ function format(number, f = 0) {
   if (number < 1000) return number.toFixed(f);
   let exponent = Math.floor(Math.log10(number));
   let mantissa = number / 10 ** exponent;
-  if (format(mantissa) === "10.00") {
+  if (format(mantissa, 2) === "10.00") {
     mantissa = 1;
     exponent++;
   }
-  return format(mantissa) + "e" + format(exponent);
+  return format(mantissa, 2) + "e" + format(exponent);
 }
 
 function formatTime(time, f = 0) {
