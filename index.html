@@ -25,7 +25,7 @@
           <tr v-for="x in game.investments.length">
             <td style="text-align: left">
               Investment {{x}}: {{formatMoney(getProfit(x - 1))}}/{{formatTime(1 / getFrequency(x - 1))}}
-              <button @click="game.investing[x - 1] ? collect(x - i) : invest(x - 1)">
+              <button @click="game.investing[x - 1] ? collect(x - 1) : invest(x - 1)">
                 {{game.investing[x - 1] ? game.moneyLoop[x - 1] &lt; 1 ? formatTime((1 - game.moneyLoop[x - 1]) / getFrequency(x - 1)) : "Collect" : "Invest"}}
               </button>
             </td>
