@@ -183,7 +183,7 @@ function load() {
   if (localStorage.getItem("TheCentillionaireSave") !== null) loadGame(JSON.parse(atob(localStorage.getItem("TheCentillionaireSave"))));
   else game.id = createID();
   interval = setInterval(() => simulateTime(Date.now() - game.lastTick));
-  saveInterval = setInterval(() => save(), 100);
+  saveInterval = setInterval(() => save(), 1000);
 }
 
 function copyStringToClipboard(str) {
