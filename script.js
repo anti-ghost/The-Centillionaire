@@ -147,7 +147,6 @@ function loop(time) {
 }
 
 function simulateTime(ms, off = false) {
-  if (!off) clickCooldown -= ms;
   game.lastTick = Date.now();
   ms *= devSpeed;
   for (let i = 0; i < game.cpf; i++) loop(ms / (1000 * game.cpf));
