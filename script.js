@@ -180,7 +180,7 @@ function save(auto = false) {
   
 function load() {
   reset();
-  if (localStorage.getItem("TheCentillionaireSave") !== null) loadGame(JSON.parse(atob("TheCentillionaireSave"))));
+  if (localStorage.getItem("TheCentillionaireSave") !== null) loadGame(JSON.parse(atob("TheCentillionaireSave")));
   else game.id = createID();
   interval = setInterval(() => simulateTime(Date.now() - game.lastTick));
   saveInterval = setInterval(() => save(), 100);
