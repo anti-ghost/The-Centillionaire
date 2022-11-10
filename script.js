@@ -222,4 +222,4 @@ function hardReset() {
 }
 
 load();
-app.mount("app");
+app.mount("#app");
