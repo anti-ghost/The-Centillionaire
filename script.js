@@ -15,6 +15,7 @@ const app = Vue.createApp(
         format,
         formatTime,
         formatMoney,
+        invest,
         collect,
         upgrade,
         unlockInvestment,
@@ -37,6 +38,7 @@ const newGame = {
   bestMoney: 0,
   totalMoney: 0,
   investments: [1],
+  investing: [false],
   moneyLoop: [0],
   managers: 0
 };
@@ -95,11 +97,17 @@ function formatMoney(money) {
   return "$" + format(money, 2);
 }
 
-function collect(i, bulk = 1) {
-  if (game.moneyLoop[i] >= bulk) {
-    game.moneyLoop[i] -= bulk;
-    game.money += getProfit(i) * bulk;
-    game.totalMoney += getProfit(i) * bulk;
+function invest(i) {
+  if (i >= game.managers) game.investing[i] = true;
+}
+
+function collect(i) {
+  if (i < game.managers) return;
+  if (game.moneyLoop[i] >= 1) {
+    game.moneyLoop[i] = 0;
+    game.money += getProfit(i);
+    game.totalMoney += getProfit(i);
+    game.investing[i] = false;
   }
 }
 
@@ -128,9 +136,12 @@ function buyManager() {
 function loop(time) {
   if (game.money > game.bestMoney) game.bestMoney = game.money;
   for (let i = 0; i < game.moneyLoop.length; i++) {
-    game.moneyLoop[i] += getFrequency(i) * time;
-    if (i < game.managers) collect(i, Math.floor(game.moneyLoop[i]));
-    else game.moneyLoop[i] = Math.min(game.moneyLoop[i], 1);
+    if (i < game.managers || game.investing[i]) game.moneyLoop[i] += getFrequency(i) * time;
+    if (i < game.managers) {
+      game.money += getProfit(i) * Math.floor(game.moneyLoop[i]);
+      game.totalMoney += getProfit(i) * Math.floor(game.moneyLoop[i]);
+      game.moneyLoop[i] %= 1;
+    } else game.moneyLoop[i] = Math.min(game.moneyLoop[i], 1);
   }
 }
   
