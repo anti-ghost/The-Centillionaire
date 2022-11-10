@@ -49,7 +49,7 @@ let devSpeed = 1;
 
 function getMoneyRate() {
   let rate = 0;
-  for (let i = 0; i < game.moneyLoop.length; i++) rate += getProfit(i) * getFrequency(i);
+  for (let i = 0; i < game.managers; i++) rate += getProfit(i) * getFrequency(i);
   return rate;
 }
 
