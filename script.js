@@ -10,7 +10,7 @@ const app = Vue.createApp(
         newGame,
         getMoneyRate,
         getProfit,
-        getFrequency
+        getFrequency,
         getUpgradeCost,
         format,
         formatTime,
