@@ -122,6 +122,7 @@ function unlockInvestment() {
   if (game.investments.length < 6 && game.money >= 100 ** game.investments.length) {
     game.money -= 100 ** game.investments.length;
     game.investments.push(1);
+    game.investing.push(false);
     game.moneyLoop.push(0);
   }
 }
