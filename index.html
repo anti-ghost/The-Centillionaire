@@ -34,7 +34,7 @@
               <button @click="buyManager()" style="width: 200px">
                 Buy a manager<br />
                 <span v-if="game.managers == 6">Maxed</span>
-                <span v-else>Cost: {{formatMoney(10 ** (2 * game.managers + 1)}}</span>
+                <span v-else>Cost: {{formatMoney(10 ** (2 * game.managers + 1))}}</span>
               </button>
             </td>
           </tr>
