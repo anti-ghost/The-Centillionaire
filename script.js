@@ -1,8 +1,36 @@
 "use strict";
 
+const VERSION = "1.0";
+
+const app = Vue.createApp(
+  {
+    data() {
+      return {
+        game,
+        newGame,
+        getMoneyRate,
+        getProfit,
+        getFrequency
+        getUpgradeCost,
+        format,
+        formatTime,
+        formatMoney,
+        collect,
+        upgrade,
+        unlockInvestment,
+        buyManager,
+        importSave,
+        exportSave,
+        hardReset
+      };
+    }
+  }
+);
+
 const game = Vue.reactive({});
 
 const newGame = {
+  version: VERSION,
   lastTick: Date.now(),
   cpf: 10,
   money: 0,
@@ -12,6 +40,10 @@ const newGame = {
   moneyLoop: [0],
   managers: 0
 };
+
+let interval, saveInterval;
+
+let devSpeed = 1;
 
 function getMoneyRate() {
   let rate = 0;
@@ -79,7 +111,7 @@ function upgrade(i) {
 }
 
 function unlockInvestment() {
-  if (game.investments.length < 6 && game.money.gte(100 ** game.investments.length)) {
+  if (game.investments.length < 6 && game.money >= 100 ** game.investments.length) {
     game.money -= 100 ** game.investments.length;
     game.investments.push(1);
     game.moneyLoop.push(0);
@@ -104,6 +136,79 @@ function loop(time) {
   
 function simulateTime(ms) {
   game.lastTick = Date.now();
-  if (DEBUG) ms *= dev.speed;
+  ms *= devSpeed;
   for (let i = 0; i < game.cpf; i++) loop(ms / (1000 * game.cpf));
 }
+
+function createID() {
+  const str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_";
+  let result = "";
+  for (let i = 0; i < 16; i++) result += str[Math.floor(Math.random() * str.length)];
+  return result;
+}
+
+function reset() {
+  for (const i in newGame) game[i] = newGame[i];
+}
+
+function loadGame(loadgame) {
+  reset();
+  for (const i in loadgame) game[i] = loadgame[i];
+  game.version = VERSION;
+  const diff = Date.now() - game.lastTick;
+  console.log(diff);
+  simulateTime(diff);
+}
+
+function save(auto = false) {
+  localStorage.setItem(
+    "TheCentillionaireSave",
+    btoa(JSON.stringify(game))
+  );
+}
+  
+function load() {
+  reset();
+  if (localStorage.getItem("TheCentillionaireSave") !== null) loadGame(JSON.parse(atob("TheCentillionaireSave"))));
+  else game.id = createID();
+  interval = setInterval(() => simulateTime(Date.now() - game.lastTick));
+  saveInterval = setInterval(() => save(), 100);
+}
+
+function copyStringToClipboard(str) {
+  const el = document.createElement("textarea");
+  el.value = str;
+  el.setAttribute("readonly", "");
+  el.style.position = "absolute";
+  el.style.left = "-9999px";
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand("copy");
+  document.body.removeChild(el);
+}
+
+function importSave() {
+  try {
+    const txt = prompt("Copy-paste your save. WARNING: WILL OVERWRITE YOUR SAVE");
+    const loadgame = JSON.parse(atob(txt));
+    if (game.id === loadgame.id) loadGame(loadgame);
+    else $.notify("Import failed, attempted to load a save with a different ID", "error");
+  } catch (e) {}
+}
+
+function exportSave() {
+  copyStringToClipboard(btoa(JSON.stringify(game)));
+  $.notify("Copied to clipboard!", "success");
+}
+
+function hardReset() {
+  if (confirm("This will delete all game data along with the ability for us to restore it. Are you sure?")) {
+    clearInterval(interval);
+    clearInterval(saveInterval);
+    localStorage.removeItem("TheCentillionaireSave");
+    location.reload();
+  }
+}
+
+load();
+app.mount("app");
