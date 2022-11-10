@@ -20,12 +20,30 @@
     <div id="app">
       <h1>{{formatMoney(game.money)}}</h1>
       <p>(+{{formatMoney(getMoneyRate())}}/s)</p>
-      <p v-for="x in game.investments.length">
-        Investment {{x}}: {{formatMoney(getProfit(x - 1))}}/{{formatTime(1 / getFrequency(x - 1))}}
-        <button @click="game.investing[x - 1] ? collect() : invest()">
-          {{game.investing[x - 1] ? game.moneyLoop[x - 1] &lt; 1 ? formatTime((1 - game.moneyLoop[x - 1]) / getFrequency(x - 1)) : "Collect" : "Invest"}}
-        </button>
-      </p>
+      <table style="width: 100%">
+        <tbody>
+          <tr v-for="x in game.investments.length">
+            <td style="text-align: left">
+              Investment {{x}}: {{formatMoney(getProfit(x - 1))}}/{{formatTime(1 / getFrequency(x - 1))}}
+              <button @click="game.investing[x - 1] ? collect() : invest()">
+                {{game.investing[x - 1] ? game.moneyLoop[x - 1] &lt; 1 ? formatTime((1 - game.moneyLoop[x - 1]) / getFrequency(x - 1)) : "Collect" : "Invest"}}
+              </button>
+            </td>
+            <td style="text-align: right">
+              Level {{format(game.investments[x - 1])}}/{{format(10 * Math.ceil((game.investments[x - 1] + 1) / 10))}}
+              <button @click="upgrade(x - 1)">
+                Cost: {{formatMoney(getUpgradeCost(x - 1))}}
+              </button>
+            </td>
+          </tr>
+          <tr v-if="game.investments.length < 6">
+            <button @click="unlockInvestment()">
+              Unlock a new investment<br />
+              Cost: {{formatMoney(100 ** game.investments.length)}}
+            </button>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </body>
 </html>
