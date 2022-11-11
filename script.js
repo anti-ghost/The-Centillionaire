@@ -54,11 +54,11 @@ function getMoneyRate() {
 }
 
 function getProfit(i) {
-  return 20 ** i * game.investments[i];
+  return 100 ** i * game.investments[i];
 }
 
 function getFrequency(i) {
-  return 2 ** (Math.floor(game.investments[i] / 10) - i);
+  return 2 ** (Math.floor(game.investments[i] / 10) - 2 * i);
 }
 
 function getUpgradeCost(i) {
