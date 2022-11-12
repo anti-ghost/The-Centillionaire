@@ -34,7 +34,7 @@ const game = Vue.reactive({});
 const newGame = {
   version: VERSION,
   lastTick: Date.now(),
-  cpf: 10,
+  cpf: 100,
   money: 0,
   bestMoney: 0,
   totalMoney: 0,
