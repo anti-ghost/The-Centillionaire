@@ -13,12 +13,14 @@ const app = Vue.createApp(
         getProfit,
         getFrequency,
         getUpgradeCost,
+        getUpgrade10Cost,
         format,
         formatTime,
         formatMoney,
         invest,
         collect,
         upgrade,
+        upgrade10,
         unlockInvestment,
         buyManager,
         importSave,
@@ -67,6 +69,15 @@ function getFrequency(i) {
 
 function getUpgradeCost(i) {
   return 100 ** i * game.investments[i] * 5 ** (Math.floor(game.investments[i] / 10) + 1);
+}
+
+function getUpgrade10Cost(i) {
+  return (
+    100 ** i *
+    5 ** (Math.floor(game.investments[i] / 10) + 1) * (
+      10 * (Math.floor(game.investments[i] / 10) + 1) * (10 * (Math.floor(game.investments[i] / 10) + 1) - 1) - game.investments[i] * (game.investments[i] - 1)
+    ) / 2
+  );
 }
 
 function format(number, f = 0) {
@@ -119,6 +130,13 @@ function upgrade(i) {
   if (game.money >= getUpgradeCost(i)) {
     game.money -= getUpgradeCost(i);
     game.investments[i]++;
+  }
+}
+
+function upgrade10(i) {
+  if (game.money >= getUpgrade10Cost(i)) {
+    game.money -= getUpgrade10Cost(i);
+    game.investments[i] = 10 * (Math.floor(game.investments[i] / 10) + 1);
   }
 }
 
