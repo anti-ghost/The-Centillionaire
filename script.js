@@ -6,6 +6,7 @@ const app = Vue.createApp(
   {
     data() {
       return {
+        tab,
         game,
         newGame,
         getMoneyRate,
@@ -46,6 +47,8 @@ const newGame = {
 let interval, saveInterval;
 
 let devSpeed = 1;
+
+let tab = 0;
 
 function getMoneyRate() {
   let rate = 0;
@@ -152,13 +155,6 @@ function simulateTime(ms, off = false) {
   for (let i = 0; i < game.cpf; i++) loop(ms / (1000 * game.cpf));
 }
 
-function createID() {
-  const str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_";
-  let result = "";
-  for (let i = 0; i < 16; i++) result += str[Math.floor(Math.random() * str.length)];
-  return result;
-}
-
 function reset() {
   for (const i in newGame) game[i] = newGame[i];
 }
@@ -172,7 +168,7 @@ function loadGame(loadgame) {
   simulateTime(diff, true);
 }
 
-function save(auto = false) {
+function save() {
   localStorage.setItem(
     "TheCentillionaireSave",
     btoa(JSON.stringify(game))
@@ -182,7 +178,6 @@ function save(auto = false) {
 function load() {
   reset();
   if (localStorage.getItem("TheCentillionaireSave") !== null) loadGame(JSON.parse(atob(localStorage.getItem("TheCentillionaireSave"))));
-  else game.id = createID();
   interval = setInterval(() => simulateTime(Date.now() - game.lastTick));
   saveInterval = setInterval(() => save(), 1000);
 }
@@ -203,8 +198,7 @@ function importSave() {
   try {
     const txt = prompt("Copy-paste your save. WARNING: WILL OVERWRITE YOUR SAVE");
     const loadgame = JSON.parse(atob(txt));
-    if (game.id === loadgame.id) loadGame(loadgame);
-    else $.notify("Import failed, attempted to load a save with a different ID", "error");
+    loadGame(loadgame);
   } catch (e) {}
 }
 
