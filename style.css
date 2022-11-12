@@ -23,7 +23,7 @@ button {
   transition-duration: 0.2s;
 }
 
-table {
+.wide {
   width: 100%;
 }
 
