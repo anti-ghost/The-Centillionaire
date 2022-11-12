@@ -78,6 +78,12 @@
         </table>
       </div>
       <div v-if="tab == 1">
+        <p>
+          <button @click="importSave()">Import your game save</button>
+          <button @click="exportSave()">Export your game save</button>
+          <button @click="hardReset()">Delete game data</button>
+        </p>
+        <p>Current Version: v1.0</p>
       </div>
       <div v-if="tab == 2">
         <p>Cash in hand: {{formatMoney(game.money)}}</p>
