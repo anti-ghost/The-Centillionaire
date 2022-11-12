@@ -35,6 +35,7 @@ const newGame = {
   version: VERSION,
   lastTick: Date.now(),
   cpf: 100,
+  timePlayed: 0,
   money: 0,
   bestMoney: 0,
   totalMoney: 0,
@@ -138,6 +139,7 @@ function buyManager() {
 }
 
 function loop(time) {
+  game.timePlayed += time;
   if (game.money > game.bestMoney) game.bestMoney = game.money;
   for (let i = 0; i < game.moneyLoop.length; i++) {
     if (i < game.managers || game.investing[i]) game.moneyLoop[i] += getFrequency(i) * time;
