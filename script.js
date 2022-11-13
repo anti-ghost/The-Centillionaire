@@ -110,11 +110,11 @@ function format(number, f = 0, sci = false) {
     }
     return format(mantissa, 2) + "e" + format(exponent);
   }
-  let exponent = 3 * Math.floor(Math.log10(number) / 3);
-  let mantissa = number / 10 ** exponent;
+  let exponent = Math.floor(Math.log10(number) / 3);
+  let mantissa = number / 1000 ** exponent;
   if (mantissa.toPrecision(3) === "1.00e+3") {
     mantissa = 1;
-    exponent += 3;
+    exponent++;
   }
   return mantissa.toPrecision(3) + LETTERS[exponent - 1];
 }
