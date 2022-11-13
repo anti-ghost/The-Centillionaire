@@ -47,6 +47,22 @@ const newGame = {
   managers: 0
 };
 
+const WORDS = [
+  "thousand",
+  "million",
+  "billion",
+  "trillion",
+  "quadrillion",
+  "quintillion",
+  "sextillion",
+  "septillion",
+  "octillion",
+  "nonillion",
+  "decillion",
+  "undecillion",
+  "duodecillion"
+];
+
 const LETTERS = [
   "K",
   "M",
@@ -96,27 +112,25 @@ function getUpgrade10Cost(i) {
   );
 }
 
-function format(number, f = 0, sci = false) {
+function format(number, f = 0, words = false) {
   if (number.sign < 0) return "-" + format(-number);
   if (number === Infinity) return "Infinity";
   if (number === 0) return "0";
   if (number < 1000) return number.toFixed(f);
-  if (sci) {
-    let exponent = Math.floor(Math.log10(number));
-    let mantissa = number / 10 ** exponent;
-    if (format(mantissa, 2) === "10.00") {
-      mantissa = 1;
-      exponent++;
-    }
-    return format(mantissa, 2) + "e" + format(exponent);
+  /* let exponent = Math.floor(Math.log10(number));
+  let mantissa = number / 10 ** exponent;
+  if (format(mantissa, 2) === "10.00") {
+    mantissa = 1;
+    exponent++;
   }
+  return format(mantissa, 2) + "e" + format(exponent); */
   let exponent = Math.floor(Math.log10(number) / 3);
   let mantissa = number / 1000 ** exponent;
   if (mantissa.toPrecision(3) === "1.00e+3") {
     mantissa = 1;
     exponent++;
   }
-  return mantissa.toPrecision(3) + LETTERS[exponent - 1];
+  return mantissa.toPrecision(3) + (words ? WORDS : LETTERS)[exponent - 1];
 }
 
 function formatTime(time, f = 0) {
@@ -133,8 +147,8 @@ function formatTime(time, f = 0) {
     format(time % 60) + "s";
 }
 
-function formatMoney(money) {
-  return "$" + format(money, 2);
+function formatMoney(money, words = false) {
+  return "$" + format(money, 2, words);
 }
 
 function invest(i) {
