@@ -53,7 +53,7 @@
             <tr v-for="x in game.investments.length">
               <td style="text-align: left;">
                 Investment {{x}}: {{formatMoney(getProfit(x - 1))}}
-                <button @click="game.investing[x - 1] ? collect(x - 1) : invest(x - 1)" style="width: 150px; margin: 0 8px;">
+                <button @click="game.investing[x - 1] ? collect(x - 1) : invest(x - 1)" style="width: 150px; margin: 0 4px;">
                   {{
                     x &lt;= game.managers ?
                       getFrequency(x - 1) > 10 ? 
@@ -69,8 +69,11 @@
               </td>
               <td style="text-align: right;">
                 Level {{format(game.investments[x - 1])}}/{{format(10 * Math.ceil((game.investments[x - 1] + 1) / 10))}}
-                <button @click="upgrade(x - 1)" style="width: 150px; margin: 0 8px;">
+                <button @click="upgrade(x - 1)" style="width: 150px; margin: 0 4px;">
                   Cost: {{formatMoney(getUpgradeCost(x - 1))}}
+                </button>
+                <button @click="upgrade10(x - 1)" style="width: 200px; margin: 0 4px;">
+                  Until 10, Cost: {{formatMoney(getUpgrade10Cost(x - 1))}}
                 </button>
               </td>
             </tr>
