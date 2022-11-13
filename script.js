@@ -64,7 +64,7 @@ function getProfit(i) {
 }
 
 function getFrequency(i) {
-  return 2 ** Math.floor(game.investments[i] / 10) / 3 ** i;
+  return 2 ** (Math.floor(game.investments[i] / 10) + i) / 5 ** i;
 }
 
 function getUpgradeCost(i) {
