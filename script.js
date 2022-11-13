@@ -104,7 +104,7 @@ function formatTime(time, f = 0) {
     format(time % 60, f) + "s";
   return format(Math.floor(time / 86400)) + "d " +
     Math.floor((time % 86400) / 3600) + "h " +
-    Math.floor((time % 3600) / 60) + "m" +
+    Math.floor((time % 3600) / 60) + "m " +
     format(time % 60, f) + "s";
 }
 
