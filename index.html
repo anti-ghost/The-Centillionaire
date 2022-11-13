@@ -18,7 +18,7 @@
   </head>
   <body>
     <div id="app">
-      <h1>{{formatMoney(game.money)}}</h1>
+      <h1>{{formatMoney(game.money, true)}}</h1>
       <p v-if="game.managers > 0">(+{{formatMoney(getMoneyRate())}}/s)</p>
       <p>
         <button @click="tab = 0" class="tabButton">
