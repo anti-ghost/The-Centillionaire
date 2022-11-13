@@ -47,6 +47,22 @@ const newGame = {
   managers: 0
 };
 
+const LETTERS = [
+  "K",
+  "M",
+  "B",
+  "T",
+  "q",
+  "Q",
+  "s",
+  "S",
+  "o",
+  "N",
+  "d",
+  "U",
+  "D"
+];
+
 let interval, saveInterval;
 
 let devSpeed = 1;
@@ -80,18 +96,27 @@ function getUpgrade10Cost(i) {
   );
 }
 
-function format(number, f = 0) {
+function format(number, f = 0, sci = false) {
   if (number.sign < 0) return "-" + format(-number);
   if (number === Infinity) return "Infinity";
   if (number === 0) return "0";
   if (number < 1000) return number.toFixed(f);
-  let exponent = Math.floor(Math.log10(number));
-  let mantissa = number / 10 ** exponent;
-  if (format(mantissa, 2) === "10.00") {
-    mantissa = 1;
-    exponent++;
+  if (sci) {
+    let exponent = Math.floor(Math.log10(number));
+    let mantissa = number / 10 ** exponent;
+    if (format(mantissa, 2) === "10.00") {
+      mantissa = 1;
+      exponent++;
+    }
+    return format(mantissa, 2) + "e" + format(exponent);
   }
-  return format(mantissa, 2) + "e" + format(exponent);
+  let exponent = 3 * Math.floor(Math.log10(number) / 3);
+  let mantissa = number / 10 ** exponent;
+  if (mantissa.toPrecision(3) === "1.00e+3") {
+    mantissa = 1;
+    exponent += 3;
+  }
+  return mantissa.toPrecision(3) + LETTERS[exponent - 1];
 }
 
 function formatTime(time, f = 0) {
@@ -105,7 +130,7 @@ function formatTime(time, f = 0) {
   return format(Math.floor(time / 86400)) + "d " +
     Math.floor((time % 86400) / 3600) + "h " +
     Math.floor((time % 3600) / 60) + "m " +
-    format(time % 60, f) + "s";
+    format(time % 60) + "s";
 }
 
 function formatMoney(money) {
