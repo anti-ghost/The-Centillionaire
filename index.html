@@ -30,6 +30,9 @@
         <button @click="tab = 2" class="tabButton">
           Statistics
         </button>
+        <button @click="tab = 3" class="tabButton">
+          Prestige
+        </button>
       </p>
       <div v-if="tab == 0">
         <table class="wide">
@@ -96,6 +99,8 @@
         <p>Time Played: {{formatTime(game.timePlayed)}}</p>
         <p>Cash on Hand: {{formatMoney(game.money)}}</p>
         <p>Lifetime Earnings: {{formatMoney(game.totalMoney)}}</p>
+      </div>
+      <div v-if="tab == 3">
       </div>
     </div>
   </body>
