@@ -186,6 +186,12 @@ function formatMoney(money, words = false) {
   return "$" + format(money, 2, words);
 }
 
+function increaseMoney(x) {
+  game.money += x;
+  game.totalMoney += x;
+  game.prestigeMoney += x;
+}
+
 function invest(i) {
   if (i >= game.managers) game.investing[i] = true;
 }
@@ -194,8 +200,7 @@ function collect(i) {
   if (i < game.managers) return;
   if (game.moneyLoop[i] >= 1) {
     game.moneyLoop[i] = 0;
-    game.money += getProfit(i);
-    game.totalMoney += getProfit(i);
+    increaseMoney(getProfit(i));
     game.investing[i] = false;
   }
 }
@@ -249,8 +254,7 @@ function loop(time) {
   for (let i = 0; i < game.moneyLoop.length; i++) {
     if (i < game.managers || game.investing[i]) game.moneyLoop[i] += getFrequency(i) * time;
     if (i < game.managers) {
-      game.money += getProfit(i) * Math.floor(game.moneyLoop[i]);
-      game.totalMoney += getProfit(i) * Math.floor(game.moneyLoop[i]);
+      increaseMoney(getProfit(i) * Math.floor(game.moneyLoop[i]));
       game.moneyLoop[i] %= 1;
     } else game.moneyLoop[i] = Math.min(game.moneyLoop[i], 1);
   }
