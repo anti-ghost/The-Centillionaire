@@ -98,6 +98,7 @@
       <div v-if="tab == 2">
         <p>Time Played: {{formatTime(game.timePlayed)}}</p>
         <p>Cash on Hand: {{formatMoney(game.money)}}</p>
+        <p v-if="game.prestiged">Prestige Earnings: {{formatMoney(game.prestigeMoney)}}</p>
         <p>Lifetime Earnings: {{formatMoney(game.totalMoney)}}</p>
       </div>
       <div v-if="tab == 3">
