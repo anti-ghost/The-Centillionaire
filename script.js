@@ -233,6 +233,8 @@ function buyManager() {
 function prestige() {
   if (getPrestigeGain() > 0) {
     game.prestigePoints += getPrestigeGain();
+    game.money = 0;
+    game.prestigeMoney = 0;
     game.investments = [1];
     game.investing = [false];
     game.moneyLoop = [0];
