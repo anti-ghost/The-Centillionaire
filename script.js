@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION = "1.0";
+const VERSION = "2.0";
 
 const app = Vue.createApp(
   {
@@ -14,6 +14,9 @@ const app = Vue.createApp(
         getFrequency,
         getUpgradeCost,
         getUpgrade10Cost,
+        getPrestigeGain,
+        getPrestigePointEffect,
+        getPrestigeBoost,
         format,
         formatTime,
         formatMoney,
@@ -23,6 +26,7 @@ const app = Vue.createApp(
         upgrade10,
         unlockInvestment,
         buyManager,
+        prestige,
         importSave,
         exportSave,
         hardReset
@@ -41,10 +45,13 @@ const newGame = {
   money: 0,
   bestMoney: 0,
   totalMoney: 0,
+  prestigeMoney: 0,
   investments: [1],
   investing: [false],
   moneyLoop: [0],
-  managers: 0
+  managers: 0,
+  prestiged: false,
+  prestigePoints: 0
 };
 
 const WORDS = [
@@ -60,7 +67,15 @@ const WORDS = [
   " nonillion",
   " decillion",
   " undecillion",
-  " duodecillion"
+  " duodecillion",
+  " tredecillion",
+  " quattuordecillion",
+  " quindecillion",
+  " sexdecillion",
+  " septendecillion",
+  " octodecillion",
+  " novemdecillion",
+  " vigintillion"
 ];
 
 const LETTERS = [
@@ -76,7 +91,15 @@ const LETTERS = [
   "N",
   "d",
   "U",
-  "D"
+  "D",
+  "tD",
+  "qD",
+  "QD",
+  "sD",
+  "SD",
+  "oD",
+  "nD",
+  "Vg"
 ];
 
 let interval, saveInterval;
@@ -92,7 +115,7 @@ function getMoneyRate() {
 }
 
 function getProfit(i) {
-  return 100 ** i * game.investments[i];
+  return 100 ** i * game.investments[i] * getPrestigeBoost();
 }
 
 function getFrequency(i) {
@@ -110,6 +133,18 @@ function getUpgrade10Cost(i) {
       10 * (Math.floor(game.investments[i] / 10) + 1) * (10 * (Math.floor(game.investments[i] / 10) + 1) - 1) - game.investments[i] * (game.investments[i] - 1)
     ) / 2
   );
+}
+
+function getPrestigeGain() {
+  return Math.max(Math.floor(Math.sqrt(game.totalMoney / 1e12)) - game.prestigePoints, 0);
+}
+
+function getPrestigePointEffect() {
+  return 0.1;
+}
+
+function getPrestigeBoost() {
+  return 1 + getPrestigePointEffect() * game.prestigePoints;
 }
 
 function format(number, f = 0, words = false) {
@@ -195,6 +230,17 @@ function buyManager() {
   }
 }
 
+function prestige() {
+  if (getPrestigeGain() > 0) {
+    game.prestigePoints += getPrestigeGain();
+    game.investments = [1];
+    game.investing = [false];
+    game.moneyLoop = [0];
+    game.managers = 0;
+    game.prestiged = true;
+  }
+}
+
 function loop(time) {
   game.timePlayed += time;
   if (game.money > game.bestMoney) game.bestMoney = game.money;
@@ -222,6 +268,7 @@ function loadGame(loadgame) {
   reset();
   for (const i in loadgame) game[i] = loadgame[i];
   game.version = VERSION;
+  if (loadgame.version == "1.0") game.prestigeMoney = game.totalMoney;
   const diff = Date.now() - game.lastTick;
   console.log(diff);
   simulateTime(diff, true);
