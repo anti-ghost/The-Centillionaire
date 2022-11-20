@@ -92,13 +92,13 @@ const LETTERS = [
   "d",
   "U",
   "D",
-  "tD",
-  "qD",
-  "QD",
-  "sD",
-  "SD",
-  "oD",
-  "nD",
+  "Td",
+  "qd",
+  "Qd",
+  "sd",
+  "Sd",
+  "od",
+  "Nd",
   "Vg"
 ];
 
